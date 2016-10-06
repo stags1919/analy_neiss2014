@@ -6,41 +6,33 @@ Created on 2016/05/25
 
 import csv
 import re
+from readfile import Readfile
 
+other_stated_rate = 0.415185783522
 
 # read DiagnosisCodes.csv
+read = Readfile()
+read.read_codename("diagnosis")
 diagnosis = {}
-r = csv.reader(open('DiagnosisCodes.csv', 'r'))
-next(r)
-for line in r:
-    code = line[1]
-    diagnosis[code] = line[0]
-
-#print diagnosis
+diagnosis = read.get_codename()
 
 # read Disposition.csv
+read = Readfile()
+read.read_codename("disposition")
 disposition = {}
-r = csv.reader(open('Disposition.csv', 'r'))
-next(r)
-for line in r:
-    code = line[1]
-    disposition[code] = line[0]
-
-#print disposition
-
+disposition = read.get_codename()
 
 # read NEISS2014.csv and make a list of disposition-diagnosis
 data = {}
 r = csv.reader(open('NEISS2014.csv', 'r'))
 next(r)
 for line in r:
-    code_disp = line[12]
-    code_diag = line[9]
+    code_disp = int(line[12])
+    code_diag = int(line[9])
     buf_disp = disposition[code_disp]
     buf_diag = diagnosis[code_diag]
     if re.search("Left", buf_disp, re.IGNORECASE) and re.search("Other/Not Stated", buf_diag, re.IGNORECASE):
         buf_diag_other = line[10]
-        #print buf_diag_other
         if data.has_key(buf_diag_other):
             data[buf_diag_other] += 1
         else:
@@ -48,7 +40,7 @@ for line in r:
    
 # write diag_other ratio         
 for k, v in sorted(data.items(), key=lambda x:x[1]):
-    print k,float(v)/float(sum(data.values()))
+    print k,float(v)/float(sum(data.values()))*other_stated_rate
 print
 
 # PAIN, BACK PAIN, KNEE PAIN,... are grouped into "PAIN_all"
@@ -62,5 +54,5 @@ for k,v in data.items():
         data2[k] = v
 # write ratio
 for k, v in sorted(data2.items(), key=lambda x:x[1]):
-    print k,float(v)/float(sum(data2.values()))
+    print k,float(v)/float(sum(data2.values()))*other_stated_rate 
 

@@ -16,13 +16,10 @@ n_female = 0
 # read data
 r = csv.reader(open('NEISS2014.csv', 'r'))
 next(r)
-i=0
 for line in r:
     narr = line[17]
-    #re.search("skateboard", narr, re.IGNORECASE)
+    re.search("skateboard", narr, re.IGNORECASE)
     if re.search("skateboard", narr, re.IGNORECASE):
-        i+=1
-        #print i,narr
         n_skate += 1
         ave_age += float(line[5])
         sex = line[6]

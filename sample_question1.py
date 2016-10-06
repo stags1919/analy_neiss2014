@@ -5,21 +5,21 @@ Created on 2016/05/25
 '''
 
 import csv
+from readfile import Readfile
 
-# read BodyParts.csv
+
+# read BodyParts.csv by class Readfile
+read = Readfile()
+read.read_codename("bodypart")
 body = {}
-r = csv.reader(open('BodyParts.csv', 'r'))
-next(r)
-for line in r:
-    code = line[1]
-    body[code] = line[0]
+body = read.get_codename()
 
 # read NEISS2014.csv and count each body parts
 data = {}
 r = csv.reader(open('NEISS2014.csv', 'r'))
 next(r)
 for line in r:
-    code = line[11]
+    code = int(line[11])
     if data.has_key(code):
         data[code] += 1
     else:
